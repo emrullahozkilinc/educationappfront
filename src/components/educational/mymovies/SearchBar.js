@@ -1,8 +1,25 @@
 import React, {Component} from 'react';
 
 class SearchBar extends Component {
+
+    constructor(props) {
+        super(props);
+
+        this.state = {value:""}
+    }
+
     formSub = (event) => {
         event.preventDefault();
+    }
+
+    textVal = (event) => {
+        this.setState({
+           value:event.target.value
+        });
+    }
+
+    addMovieSubmit = (event) => {
+        this.props.addMovie(this.state.value);
     }
 
     render() {
@@ -18,6 +35,7 @@ class SearchBar extends Component {
                     </div>
                     <div className="col-3">
                         <input  type="text"
+                                onChange={this.textVal}
                                 className="form-control"
                                 placeholder="Type Movie Id"
                         />
@@ -25,6 +43,7 @@ class SearchBar extends Component {
                     <div>
                         <button type="button"
                                 className="btn btn-md btn-primary"
+                                onClick={this.addMovieSubmit}
                                 style={{float:'right'}}>
                         Add Movie
                         </button>

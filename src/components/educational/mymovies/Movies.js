@@ -8,7 +8,10 @@ class Movies extends Component {
 
     state = {
         movies: [],
-        searchQuery:""
+        searchQuery:"",
+        api_key:"462f7af511aaddd90d14548652296979",
+        session_id:"3eba5c2cdca2fd2c9d2a9b736f2dcc19d1752a7f",
+        list_id:"8201286"
     }
 /*
     async componentDidMount() {
@@ -20,35 +23,51 @@ class Movies extends Component {
     }
 */
     async componentDidMount() {
-        const resp = await axios.get("https://api.themoviedb.org/3/list/8201286?api_key=462f7af511aaddd90d14548652296979&language=en-US");
+        const resp = await axios.get(`https://api.themoviedb.org/3/list/${this.state.list_id}?api_key=${this.state.api_key}&language=en-US`);
+        this.setState({
+            movies: resp.data.items
+        })
+    }
+
+    async componentDidUpdate() {
+        const resp = await axios.get(`https://api.themoviedb.org/3/list/${this.state.list_id}?api_key=${this.state.api_key}&language=en-US`);
         this.setState({
             movies: resp.data.items
         })
     }
 
     delMovie = async (movie) => {
-        const URL = `https://api.themoviedb.org/3/list/8201286/remove_item?session_id=3eba5c2cdca2fd2c9d2a9b736f2dcc19d1752a7f&media_id=${movie.id}&api_key=462f7af511aaddd90d14548652296979`
+        const URL = `https://api.themoviedb.org/3/list/${this.state.list_id}/remove_item?session_id=${this.state.session_id}&media_id=${movie.id}&api_key=${this.state.api_key}`;
         await axios.post(URL);
-        const newMovies = await axios.get("https://api.themoviedb.org/3/list/8201286?api_key=462f7af511aaddd90d14548652296979&language=en-US");
+        const newMovies = await axios.get(`https://api.themoviedb.org/3/list/${this.state.list_id}?api_key=${this.state.api_key}&language=en-US`);
         this.setState({movies: newMovies.data.items});
     }
 
-    addMovie = async (movie) => {
-
+    addMovie = async (value) => {
+        if(!value.match("^[1-9]+[0-9]*$"))
+            return;
+        const URL = `https://api.themoviedb.org/3/list/${this.state.list_id}/add_item?media_id=${value}&api_key=${this.state.api_key}&session_id=${this.state.session_id}`;
+        await axios.post(URL)
     }
 
     bringMovie = (event) => {
-        this.setState({searchQuery: event.target.value});
+        this.setState({
+            searchQuery: event.target.value
+        });
     }
 
     render() {
-        let filteredMovies = this.state.movies.filter(m => { return m.title.toLowerCase().includes(this.state.searchQuery.toLowerCase())});
+        let filteredMovies = this.state.movies.filter(m => {
+            return m.title.toLowerCase().includes(
+                this.state.searchQuery.toLowerCase()
+            )
+        });
 
         return (
             <div className="container">
                 <div className="row">
                     <div className="col-lg-12">
-                        <SearchBar searchMovie={this.bringMovie}/>
+                        <SearchBar searchMovie={this.bringMovie} addMovie={this.addMovie}/>
                     </div>
                 </div>
                 <MovieCard movieList={filteredMovies} delMovie={this.delMovie}/>
