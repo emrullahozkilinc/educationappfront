@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import MovieCard from "./MovieCard";
 import SearchBar from "./SearchBar";
+import axios from "axios";
+import AddMovie from "./AddMovie"
 
 class Movies extends Component {
 
@@ -8,7 +10,7 @@ class Movies extends Component {
         movies: [],
         searchQuery:""
     }
-
+/*
     async componentDidMount() {
         const URL = "http://localhost:3002/movies";
         const response = await fetch(URL);
@@ -16,10 +18,23 @@ class Movies extends Component {
         this.setState({movies: items});
         console.log(this.state.movies);
     }
+*/
+    async componentDidMount() {
+        const resp = await axios.get("https://api.themoviedb.org/3/list/8201286?api_key=462f7af511aaddd90d14548652296979&language=en-US");
+        this.setState({
+            movies: resp.data.items
+        })
+    }
 
-    delMovie = (movie) => {
-        const newMovies = this.state.movies.filter(m => m.id !== movie.id);
-        this.setState({movies: newMovies});
+    delMovie = async (movie) => {
+        const URL = `https://api.themoviedb.org/3/list/8201286/remove_item?session_id=3eba5c2cdca2fd2c9d2a9b736f2dcc19d1752a7f&media_id=${movie.id}&api_key=462f7af511aaddd90d14548652296979`
+        await axios.post(URL);
+        const newMovies = await axios.get("https://api.themoviedb.org/3/list/8201286?api_key=462f7af511aaddd90d14548652296979&language=en-US");
+        this.setState({movies: newMovies.data.items});
+    }
+
+    addMovie = async (movie) => {
+
     }
 
     bringMovie = (event) => {
@@ -27,7 +42,7 @@ class Movies extends Component {
     }
 
     render() {
-        let filteredMovies = this.state.movies.filter(m => { return m.name.toLowerCase().includes(this.state.searchQuery.toLowerCase())});
+        let filteredMovies = this.state.movies.filter(m => { return m.title.toLowerCase().includes(this.state.searchQuery.toLowerCase())});
 
         return (
             <div className="container">
