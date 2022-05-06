@@ -3,6 +3,7 @@ import MovieCard from "./MovieCard";
 import SearchBar from "./SearchBar";
 import axios from "axios";
 import AddMovie from "./AddMovie"
+import {BrowserRouter as Router, Switch, Route, Link} from "react-router-dom";
 
 class Movies extends Component {
 
@@ -13,23 +14,16 @@ class Movies extends Component {
         session_id:"3eba5c2cdca2fd2c9d2a9b736f2dcc19d1752a7f",
         list_id:"8201286"
     }
-/*
+
     async componentDidMount() {
-        const URL = "http://localhost:3002/movies";
-        const response = await fetch(URL);
-        const items = await response.json();
-        this.setState({movies: items});
-        console.log(this.state.movies);
-    }
-*/
-    async componentDidMount() {
-        const resp = await axios.get(`https://api.themoviedb.org/3/list/${this.state.list_id}?api_key=${this.state.api_key}&language=en-US`);
-        this.setState({
-            movies: resp.data.items
-        })
+        this.updateMovieList();
     }
 
     async componentDidUpdate() {
+        this.updateMovieList();
+    }
+
+    updateMovieList = async () => {
         const resp = await axios.get(`https://api.themoviedb.org/3/list/${this.state.list_id}?api_key=${this.state.api_key}&language=en-US`);
         this.setState({
             movies: resp.data.items
