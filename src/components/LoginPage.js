@@ -12,6 +12,7 @@ class LoginPage extends Component {
 
     loginSubmit = (e) => {
         e.preventDefault();
+        this.props.loginService(this.state.username, this.state.password);
     }
 
     changedUname = (e) => {
