@@ -1,36 +1,48 @@
-import {useEffect, useState} from "react";
+import React from "react";
+import axios from "axios";
 
-function UserTable() {
-    const [users, setUsers] = useState([]);
-    
+class UserTable extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            users: []
+        }
+    }
 
-     useEffect(() =>{
-        fetch('http://localhost:8080/getUsers')
+    componentDidMount() {
+        axios.get("http://localhost:8080/getUsers", {
+            headers: {
+                "authorization": this.props.authToken
+            }
+        })
             .then(res => {
-                res.json()
-                    .then(data => {
-                        setUsers(data);
-                    })
+                this.setState({
+                    users: res.data
+                })
             });
-     }, []);
+    }
 
-    function delClick(param) {
+
+    delClick = (param) => {
         fetch('http://localhost:8080/delUser/' + param, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: {
+                'authorization': this.props.authToken
+            }
         })
             .then(res => {
                 res.json()
                     .then(data => {
-                        console.log(data);
+                        console.log('http://localhost:8080/delUser/' + param);
                     })
             });
     }
 
 
 
-
+    render() {
         return (
-            <div>
+            <div className="container-sm">
                 <h1 className="text-center">User Table</h1>
                 <table className="table table-striped">
                     <thead>
@@ -44,7 +56,7 @@ function UserTable() {
                     </tr>
                     </thead>
                     <tbody>
-                    {users.map(x =>
+                    {this.state.users.map(x =>
                         <tr key={x.id}>
                             <td>{x.id}</td>
                             <td>{x.name}</td>
@@ -53,13 +65,15 @@ function UserTable() {
                             <td>{x.type}</td>
                             <td>
                                 <button className="btn btn-primary">Edit</button>
-                                <button className="btn btn-danger" onClick={delClick}>Delete</button></td>
+                                <button className="btn btn-danger" onClick={() => this.delClick(x.id)}>Delete</button>
+                            </td>
                         </tr>
                     )}
                     </tbody>
                 </table>
             </div>
         );
+    }
 }
 
 export default UserTable;
