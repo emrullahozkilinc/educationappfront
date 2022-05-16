@@ -30,9 +30,12 @@ class UserTable extends React.Component {
                 "authorization": this.props.authToken
             }
         }).then(res => {
-            this.setState({
-                users: res.data
-            })
+            if (JSON.stringify(this.state.users) !== JSON.stringify(res.data)) {
+                this.setState({
+                    ...this.state,
+                    users: res.data
+                })
+            }
         });
     }
 
@@ -42,6 +45,10 @@ class UserTable extends React.Component {
                 'authorization': this.props.authToken
             }
         }).then(res => {
+            this.setState({
+                ...this.state,
+                users: this.state.users.filter(user => user.id !== param)
+            });
             alert(res.data);
         });
     }
