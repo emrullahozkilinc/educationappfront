@@ -19,40 +19,40 @@ class UpdateUser extends Component {
     render() {
         return (
             <tr key={this.props.x.id}>
-                <td hidden={true}><form id="form1" onSubmit={this.saveSubmit }></form></td>
-                <td><input form="form1" placeholder={this.props.x.id} onChange={() =>
+                <td hidden={true}><form id="form1" onSubmit={(e) => this.props.saveSubmit(e, this.state.changedUser, this.props.x.id)}></form></td>
+                <td><input form="form1" placeholder={this.props.x.id} className="form-control-sm"/></td>
+                <td><input form="form1" placeholder={this.props.x.name} onChange={(e) =>
+                    this.setState(
+                        {
+                            ...this.state, changedUser: {
+                                ...this.state.changedUser,
+                                name: e.target.value
+                            }
+                        }
+                    )} className="form-control-sm"/></td>
+                <td><input form="form1" placeholder={this.props.x.username} onChange={(e) => {
+                    this.setState(
+                        {
+                            ...this.state, changedUser: {
+                                ...this.state.changedUser,
+                                username: e.target.value
+                            }
+                        }
+                    )
+                    console.log()
+                }} className="form-control-sm"/></td>
+                <td><input form="form1" placeholder={this.props.x.password} onChange={(e) =>
                     this.setState(
                         {...this.state, changedUser:{
                                 ...this.state.changedUser,
-                                id:this.props.x.id
+                                password:e.target.value
                             }}
                     )} className="form-control-sm"/></td>
-                <td><input form="form1" placeholder={this.props.x.name} onChange={() =>
+                <td><input form="form1" placeholder={this.props.x.type} onChange={(e) =>
                     this.setState(
                         {...this.state, changedUser:{
                                 ...this.state.changedUser,
-                                name:this.props.x.name
-                            }}
-                    )} className="form-control-sm"/></td>
-                <td><input form="form1" placeholder={this.props.x.username} onChange={() =>
-                    this.setState(
-                        {...this.state, changedUser:{
-                                ...this.state.changedUser,
-                                username:this.props.x.username
-                            }}
-                    )} className="form-control-sm"/></td>
-                <td><input form="form1" placeholder={this.props.x.password} onChange={() =>
-                    this.setState(
-                        {...this.state, changedUser:{
-                                ...this.state.changedUser,
-                                password:this.props.x.password
-                            }}
-                    )} className="form-control-sm"/></td>
-                <td><input form="form1" placeholder={this.props.x.type} onChange={() =>
-                    this.setState(
-                        {...this.state, changedUser:{
-                                ...this.state.changedUser,
-                                type:this.props.x.type
+                                type:e.target.value
                             }}
                     )} className="form-control-sm"/></td>
                 <td><input form="form1" type="submit" className="btn btn-success" value="Save"/></td>

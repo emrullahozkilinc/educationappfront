@@ -53,18 +53,15 @@ class UserTable extends React.Component {
         });
     }
 
-    saveSubmit = (param) => {
-        /*
-        axios.put('http://localhost:8080/delUser/' + param, {
+    saveSubmit = (e, param, id) => {
+        e.preventDefault();
+        axios.put('http://localhost:8080/updateUser/' + id, {
             headers: {'authorization': this.props.authToken},
-            data: {
+            user: param
 
-            }
         }).then(res => {
             alert(res.data);
         });
-         */
-        console.log(this.state.changedUser);
     }
 
 
@@ -99,7 +96,7 @@ class UserTable extends React.Component {
                                     </td>
                                 </tr>
                             );
-                        } else {return (<UpdateUser x={x}/>);}}
+                        } else {return (<UpdateUser x={x} saveSubmit={this.saveSubmit}/>);}}
                     )}
                     </tbody>
                 </table>
