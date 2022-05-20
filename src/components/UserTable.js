@@ -19,7 +19,8 @@ class UserTable extends React.Component {
         })
             .then(res => {
                 this.setState({
-                    users: res.data
+                    ...this.state,
+                    users: res.data.sort((a,b) => a.id - b.id)
                 })
             });
     }
@@ -33,7 +34,7 @@ class UserTable extends React.Component {
             if (JSON.stringify(this.state.users) !== JSON.stringify(res.data)) {
                 this.setState({
                     ...this.state,
-                    users: res.data
+                    users: res.data.sort((a,b) => a.id - b.id)
                 })
             }
         });
@@ -55,12 +56,21 @@ class UserTable extends React.Component {
 
     saveSubmit = (e, param, id) => {
         e.preventDefault();
-        axios.put('http://localhost:8080/updateUser/' + id, {
-            headers: {'authorization': this.props.authToken},
-            user: param
-
+        axios({
+            method: 'put',
+            url: 'http://localhost:8080/updateUser/' + id,
+            headers: {
+                'Authorization': this.props.authToken,
+                'Content-Type': 'application/json'
+            },
+            data : JSON.stringify(param)
         }).then(res => {
-            alert(res.data);
+            this.setState({
+                ...this.state,
+                inputRowId: -1,
+                users:[]
+            });
+            alert(res.data)
         });
     }
 
