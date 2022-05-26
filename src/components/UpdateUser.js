@@ -38,7 +38,6 @@ class UpdateUser extends Component {
                             }
                         }
                     )
-                    console.log()
                 }} className="form-control-sm"/></td>
                 <td><input form="form1" placeholder={this.props.x.password} onChange={(e) =>
                     this.setState(

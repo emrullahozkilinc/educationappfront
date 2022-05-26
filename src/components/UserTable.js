@@ -20,6 +20,7 @@ class UserTable extends React.Component {
             .then(res => {
                 this.setState({
                     ...this.state,
+                    received: res.data,
                     users: res.data.sort((a,b) => a.id - b.id)
                 })
             });
@@ -31,7 +32,7 @@ class UserTable extends React.Component {
                 "authorization": this.props.authToken
             }
         }).then(res => {
-            if (JSON.stringify(this.state.users) !== JSON.stringify(res.data)) {
+            if (JSON.stringify(this.state.users) !== JSON.stringify(res.data.sort((a,b) => a.id - b.id))) {
                 this.setState({
                     ...this.state,
                     users: res.data.sort((a,b) => a.id - b.id)
